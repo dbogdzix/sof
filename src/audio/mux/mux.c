@@ -14,11 +14,12 @@
 #include <sof/lock.h>
 #include <sof/list.h>
 #include <sof/stream.h>
+#include <sof/ut.h>
 #include <sof/audio/component.h>
 #include <sof/ipc.h>
 #include <sof/audio/mux.h>
 
-static int mux_set_values(struct comp_data *cd, struct sof_mux_config *cfg)
+UT_STATIC int mux_set_values(struct comp_data *cd, struct sof_mux_config *cfg)
 {
 	uint8_t i;
 	uint8_t j;
@@ -71,7 +72,7 @@ static int mux_set_values(struct comp_data *cd, struct sof_mux_config *cfg)
 	return 0;
 }
 
-static struct comp_dev *mux_new(struct sof_ipc_comp *comp)
+UT_STATIC struct comp_dev *mux_new(struct sof_ipc_comp *comp)
 {
 	struct sof_ipc_comp_process *ipc_process =
 		(struct sof_ipc_comp_process *)comp;
@@ -120,7 +121,7 @@ static struct comp_dev *mux_new(struct sof_ipc_comp *comp)
 	return dev;
 }
 
-static void mux_free(struct comp_dev *dev)
+UT_STATIC void mux_free(struct comp_dev *dev)
 {
 	struct comp_data *cd = comp_get_drvdata(dev);
 
@@ -131,7 +132,7 @@ static void mux_free(struct comp_dev *dev)
 }
 
 /* set component audio stream parameters */
-static int mux_params(struct comp_dev *dev)
+UT_STATIC int mux_params(struct comp_dev *dev)
 {
 	struct comp_data *cd = comp_get_drvdata(dev);
 
@@ -143,8 +144,8 @@ static int mux_params(struct comp_dev *dev)
 	return 0;
 }
 
-static int mux_ctrl_set_cmd(struct comp_dev *dev,
-			    struct sof_ipc_ctrl_data *cdata)
+UT_STATIC int mux_ctrl_set_cmd(struct comp_dev *dev,
+			       struct sof_ipc_ctrl_data *cdata)
 {
 	struct comp_data *cd = comp_get_drvdata(dev);
 	struct sof_mux_config *cfg;
@@ -169,8 +170,8 @@ static int mux_ctrl_set_cmd(struct comp_dev *dev,
 }
 
 /* used to pass standard and bespoke commands (with data) to component */
-static int mux_cmd(struct comp_dev *dev, int cmd, void *data,
-		   int max_data_size)
+UT_STATIC int mux_cmd(struct comp_dev *dev, int cmd, void *data,
+		      int max_data_size)
 {
 	struct sof_ipc_ctrl_data *cdata = data;
 
@@ -184,7 +185,7 @@ static int mux_cmd(struct comp_dev *dev, int cmd, void *data,
 	}
 }
 
-static uint8_t get_stream_index(struct comp_data *cd, uint32_t pipe_id)
+UT_STATIC uint8_t get_stream_index(struct comp_data *cd, uint32_t pipe_id)
 {
 	int i;
 
@@ -198,7 +199,7 @@ static uint8_t get_stream_index(struct comp_data *cd, uint32_t pipe_id)
 }
 
 /* process and copy stream data from source to sink buffers */
-static int demux_copy(struct comp_dev *dev)
+UT_STATIC int demux_copy(struct comp_dev *dev)
 {
 	struct comp_data *cd = comp_get_drvdata(dev);
 	struct comp_buffer *source;
@@ -267,7 +268,7 @@ static int demux_copy(struct comp_dev *dev)
 }
 
 /* process and copy stream data from source to sink buffers */
-static int mux_copy(struct comp_dev *dev)
+UT_STATIC int mux_copy(struct comp_dev *dev)
 {
 	struct comp_data *cd = comp_get_drvdata(dev);
 	struct comp_buffer *sink;
@@ -331,14 +332,14 @@ static int mux_copy(struct comp_dev *dev)
 	return 0;
 }
 
-static int mux_reset(struct comp_dev *dev)
+UT_STATIC int mux_reset(struct comp_dev *dev)
 {
 	trace_mux("mux_reset()");
 
 	return comp_set_state(dev, COMP_TRIGGER_RESET);
 }
 
-static int mux_prepare(struct comp_dev *dev)
+UT_STATIC int mux_prepare(struct comp_dev *dev)
 {
 	struct comp_data *cd = comp_get_drvdata(dev);
 	int ret;
@@ -366,7 +367,7 @@ err:
 	return ret;
 }
 
-static int demux_prepare(struct comp_dev *dev)
+UT_STATIC int demux_prepare(struct comp_dev *dev)
 {
 	struct comp_data *cd = comp_get_drvdata(dev);
 	int ret;
@@ -395,7 +396,7 @@ err:
 	return ret;
 }
 
-static int mux_trigger(struct comp_dev *dev, int cmd)
+UT_STATIC int mux_trigger(struct comp_dev *dev, int cmd)
 {
 	trace_mux("mux_trigger(), command = %u", cmd);
 
@@ -430,7 +431,7 @@ struct comp_driver comp_demux = {
 	},
 };
 
-static void sys_comp_mux_init(void)
+UT_STATIC void sys_comp_mux_init(void)
 {
 	comp_register(&comp_mux);
 	comp_register(&comp_demux);

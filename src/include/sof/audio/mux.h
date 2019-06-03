@@ -82,6 +82,51 @@ extern const struct comp_func_map mux_func_map[];
 mux_func mux_get_processing_function(struct comp_dev *dev);
 demux_func demux_get_processing_function(struct comp_dev *dev);
 
+#ifdef UNIT_TEST
+
+int mux_set_values(struct comp_data *cd, struct sof_mux_config *cfg);
+void mux_free(struct comp_dev *dev);
+struct comp_dev *mux_new(struct sof_ipc_comp *comp);
+int mux_reset(struct comp_dev *dev);
+void sys_comp_mux_init(void);
+uint8_t get_stream_index(struct comp_data *cd, uint32_t pipe_id);
+int mux_trigger(struct comp_dev *dev, int cmd);
+int demux_prepare(struct comp_dev *dev);
+int mux_prepare(struct comp_dev *dev);
+int mux_cmd(struct comp_dev *dev, int cmd, void *data,
+	    int max_data_size);
+int mux_params(struct comp_dev *dev);
+int mux_ctrl_set_cmd(struct comp_dev *dev,
+		     struct sof_ipc_ctrl_data *cdata);
+int mux_copy(struct comp_dev *dev);
+int demux_copy(struct comp_dev *dev);
+inline int32_t calc_sample_s16le(struct comp_buffer *source, uint8_t num_ch,
+				 uint32_t offset, uint8_t mask);
+inline int32_t calc_sample_s24le(struct comp_buffer *source, uint8_t num_ch,
+				 uint32_t offset, uint8_t mask);
+inline int64_t calc_sample_s32le(struct comp_buffer *source, uint8_t num_ch,
+				 uint32_t offset, uint8_t mask);
+void demux_s16le(struct comp_dev *dev, struct comp_buffer *sink,
+		 struct comp_buffer *source, uint32_t frames,
+		 struct mux_stream_data *data);
+void demux_s24le(struct comp_dev *dev, struct comp_buffer *sink,
+		 struct comp_buffer *source, uint32_t frames,
+		 struct mux_stream_data *data);
+void demux_s32le(struct comp_dev *dev, struct comp_buffer *sink,
+		 struct comp_buffer *source, uint32_t frames,
+		 struct mux_stream_data *data);
+void mux_s16le(struct comp_dev *dev, struct comp_buffer *sink,
+	       struct comp_buffer **sources, uint32_t frames,
+	       struct mux_stream_data *data);
+void mux_s24le(struct comp_dev *dev, struct comp_buffer *sink,
+		      struct comp_buffer **sources, uint32_t frames,
+		      struct mux_stream_data *data);
+void mux_s32le(struct comp_dev *dev, struct comp_buffer *sink,
+		      struct comp_buffer **sources, uint32_t frames,
+		      struct mux_stream_data *data);
+int get_mux_func_map_size(void);
+#endif
+
 #endif /* CONFIG_COMP_MUX */
 
 #endif /* MUX_H */

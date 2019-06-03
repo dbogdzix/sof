@@ -8,6 +8,7 @@
 
 #if CONFIG_COMP_MUX
 
+#include <sof/ut.h>
 #include <sof/audio/mux.h>
 
 /*
@@ -18,9 +19,9 @@
  * \param[in] offset Offset in source buffer.
  * \param[in] mask Routing bitmask for calculating output sample.
  */
-static inline int32_t calc_sample_s16le(struct comp_buffer *source,
-					uint8_t num_ch, uint32_t offset,
-					uint8_t mask)
+UT_STATIC inline int32_t calc_sample_s16le(struct comp_buffer *source,
+					   uint8_t num_ch, uint32_t offset,
+					   uint8_t mask)
 {
 	int32_t sample = 0;
 	int16_t *src;
@@ -47,9 +48,9 @@ static inline int32_t calc_sample_s16le(struct comp_buffer *source,
  * \param[in] offset Offset in source buffer.
  * \param[in] mask Routing bitmask for calculating output sample.
  */
-static inline int32_t calc_sample_s24le(struct comp_buffer *source,
-					uint8_t num_ch, uint32_t offset,
-					uint8_t mask)
+UT_STATIC inline int32_t calc_sample_s24le(struct comp_buffer *source,
+					   uint8_t num_ch, uint32_t offset,
+					   uint8_t mask)
 {
 	int32_t sample = 0;
 	int32_t *src;
@@ -76,9 +77,9 @@ static inline int32_t calc_sample_s24le(struct comp_buffer *source,
  * \param[in] offset Offset in source buffer.
  * \param[in] mask Routing bitmask for calculating output sample.
  */
-static inline int64_t calc_sample_s32le(struct comp_buffer *source,
-					uint8_t num_ch, uint32_t offset,
-					uint8_t mask)
+UT_STATIC inline int64_t calc_sample_s32le(struct comp_buffer *source,
+					   uint8_t num_ch, uint32_t offset,
+					   uint8_t mask)
 {
 	int64_t sample = 0;
 	int32_t *src;
@@ -109,9 +110,9 @@ static inline int64_t calc_sample_s32le(struct comp_buffer *source,
  * \param[in] frames Number of frames to process.
  * \param[in] data Parameters describing channel count and routing.
  */
-static void demux_s16le(struct comp_dev *dev, struct comp_buffer *sink,
-			struct comp_buffer *source, uint32_t frames,
-			struct mux_stream_data *data)
+UT_STATIC void demux_s16le(struct comp_dev *dev, struct comp_buffer *sink,
+			   struct comp_buffer *source, uint32_t frames,
+			   struct mux_stream_data *data)
 {
 	struct comp_data *cd = comp_get_drvdata(dev);
 	int32_t sample;
@@ -146,9 +147,9 @@ static void demux_s16le(struct comp_dev *dev, struct comp_buffer *sink,
  * \param[in] frames Number of frames to process.
  * \param[in] data Parameters describing channel count and routing.
  */
-static void demux_s24le(struct comp_dev *dev, struct comp_buffer *sink,
-			struct comp_buffer *source, uint32_t frames,
-			struct mux_stream_data *data)
+UT_STATIC void demux_s24le(struct comp_dev *dev, struct comp_buffer *sink,
+			   struct comp_buffer *source, uint32_t frames,
+			   struct mux_stream_data *data)
 {
 	struct comp_data *cd = comp_get_drvdata(dev);
 	int32_t sample;
@@ -183,9 +184,9 @@ static void demux_s24le(struct comp_dev *dev, struct comp_buffer *sink,
  * \param[in] frames Number of frames to process.
  * \param[in] data Parameters describing channel count and routing.
  */
-static void demux_s32le(struct comp_dev *dev, struct comp_buffer *sink,
-			struct comp_buffer *source, uint32_t frames,
-			struct mux_stream_data *data)
+UT_STATIC void demux_s32le(struct comp_dev *dev, struct comp_buffer *sink,
+			   struct comp_buffer *source, uint32_t frames,
+			   struct mux_stream_data *data)
 {
 	struct comp_data *cd = comp_get_drvdata(dev);
 	int64_t sample;
@@ -222,9 +223,9 @@ static void demux_s32le(struct comp_dev *dev, struct comp_buffer *sink,
  * \param[in] data Array of parameters describing channel count and routing for
  *		   each stream.
  */
-static void mux_s16le(struct comp_dev *dev, struct comp_buffer *sink,
-		      struct comp_buffer **sources, uint32_t frames,
-		      struct mux_stream_data *data)
+UT_STATIC void mux_s16le(struct comp_dev *dev, struct comp_buffer *sink,
+			 struct comp_buffer **sources, uint32_t frames,
+			 struct mux_stream_data *data)
 {
 	struct comp_data *cd = comp_get_drvdata(dev);
 	struct comp_buffer *source;
@@ -269,7 +270,7 @@ static void mux_s16le(struct comp_dev *dev, struct comp_buffer *sink,
  * \param[in] data Array of parameters describing channel count and routing for
  *		   each stream.
  */
-static void mux_s24le(struct comp_dev *dev, struct comp_buffer *sink,
+UT_STATIC void mux_s24le(struct comp_dev *dev, struct comp_buffer *sink,
 		      struct comp_buffer **sources, uint32_t frames,
 		      struct mux_stream_data *data)
 {
@@ -315,7 +316,7 @@ static void mux_s24le(struct comp_dev *dev, struct comp_buffer *sink,
  * \param[in] data Array of parameters describing channel count and routing for
  *		   each stream.
  */
-static void mux_s32le(struct comp_dev *dev, struct comp_buffer *sink,
+UT_STATIC void mux_s32le(struct comp_dev *dev, struct comp_buffer *sink,
 		      struct comp_buffer **sources, uint32_t frames,
 		      struct mux_stream_data *data)
 {
@@ -378,5 +379,12 @@ demux_func demux_get_processing_function(struct comp_dev *dev)
 
 	return NULL;
 }
+
+#ifdef UNIT_TEST
+int get_mux_func_map_size(void)
+{
+	return ARRAY_SIZE(mux_func_map);
+}
+#endif
 
 #endif /* CONFIG_COMP_MUX */
