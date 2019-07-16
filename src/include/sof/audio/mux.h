@@ -85,6 +85,42 @@ extern const struct comp_func_map mux_func_map[];
 mux_func mux_get_processing_function(struct comp_dev *dev);
 demux_func demux_get_processing_function(struct comp_dev *dev);
 
+#ifdef UNIT_TEST
+void sys_comp_mux_init(void);
+
+int mux_set_values(struct comp_data *cd, struct sof_mux_config *cfg);
+int mux_ctrl_set_cmd(struct comp_dev *dev,
+		     struct sof_ipc_ctrl_data *cdata);
+uint8_t get_stream_index(struct comp_data *cd, uint32_t pipe_id);
+
+int32_t calc_sample_s16le(struct comp_buffer *source, uint8_t num_ch,
+			  uint32_t offset, uint8_t mask);
+int32_t calc_sample_s24le(struct comp_buffer *source, uint8_t num_ch,
+			  uint32_t offset, uint8_t mask);
+int64_t calc_sample_s32le(struct comp_buffer *source, uint8_t num_ch,
+			  uint32_t offset, uint8_t mask);
+
+void demux_s16le(struct comp_dev *dev, struct comp_buffer *sink,
+		 struct comp_buffer *source, uint32_t frames,
+		 struct mux_stream_data *data);
+void demux_s24le(struct comp_dev *dev, struct comp_buffer *sink,
+		 struct comp_buffer *source, uint32_t frames,
+		 struct mux_stream_data *data);
+void demux_s32le(struct comp_dev *dev, struct comp_buffer *sink,
+		 struct comp_buffer *source, uint32_t frames,
+		 struct mux_stream_data *data);
+
+void mux_s16le(struct comp_dev *dev, struct comp_buffer *sink,
+	       struct comp_buffer **sources, uint32_t frames,
+	       struct mux_stream_data *data);
+void mux_s24le(struct comp_dev *dev, struct comp_buffer *sink,
+	       struct comp_buffer **sources, uint32_t frames,
+	       struct mux_stream_data *data);
+void mux_s32le(struct comp_dev *dev, struct comp_buffer *sink,
+	       struct comp_buffer **sources, uint32_t frames,
+	       struct mux_stream_data *data);
+#endif /* UNIT_TEST */
+
 #endif /* CONFIG_COMP_MUX */
 
 #endif /* __SOF_AUDIO_MUX_H__ */

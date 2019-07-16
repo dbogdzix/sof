@@ -20,13 +20,14 @@
 #include <sof/preproc.h>
 #include <sof/string.h>
 #include <sof/trace.h>
+#include <sof/ut.h>
 #include <ipc/control.h>
 #include <ipc/topology.h>
 #include <errno.h>
 #include <stddef.h>
 #include <stdint.h>
 
-static int mux_set_values(struct comp_data *cd, struct sof_mux_config *cfg)
+UT_STATIC int mux_set_values(struct comp_data *cd, struct sof_mux_config *cfg)
 {
 	uint8_t i;
 	uint8_t j;
@@ -151,8 +152,8 @@ static int mux_params(struct comp_dev *dev)
 	return 0;
 }
 
-static int mux_ctrl_set_cmd(struct comp_dev *dev,
-			    struct sof_ipc_ctrl_data *cdata)
+UT_STATIC int mux_ctrl_set_cmd(struct comp_dev *dev,
+			       struct sof_ipc_ctrl_data *cdata)
 {
 	struct comp_data *cd = comp_get_drvdata(dev);
 	struct sof_mux_config *cfg;
@@ -178,7 +179,7 @@ static int mux_ctrl_set_cmd(struct comp_dev *dev,
 
 /* used to pass standard and bespoke commands (with data) to component */
 static int mux_cmd(struct comp_dev *dev, int cmd, void *data,
-		   int max_data_size)
+		      int max_data_size)
 {
 	struct sof_ipc_ctrl_data *cdata = data;
 
@@ -192,7 +193,7 @@ static int mux_cmd(struct comp_dev *dev, int cmd, void *data,
 	}
 }
 
-static uint8_t get_stream_index(struct comp_data *cd, uint32_t pipe_id)
+UT_STATIC uint8_t get_stream_index(struct comp_data *cd, uint32_t pipe_id)
 {
 	int i;
 
@@ -438,7 +439,7 @@ struct comp_driver comp_demux = {
 	},
 };
 
-static void sys_comp_mux_init(void)
+UT_STATIC void sys_comp_mux_init(void)
 {
 	comp_register(&comp_mux);
 	comp_register(&comp_demux);
